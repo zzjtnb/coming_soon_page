@@ -1,6 +1,6 @@
 # Auto detect text files and perform LF normalization
-* text=HTML
-*.css linguist-language=HTML
-*.less linguist-language=HTML
-*.js linguist-language=HTML
-*.html linguist-language=HTML
+* text=Vue
+*.css linguist-language=Vue
+*.less linguist-language=Vue
+*.js linguist-language=Vue
+*.html linguist-language=Vue
