@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+const showMark = ref(true);
 const audio = ref<HTMLAudioElement | null>(null);
 const progress = ref<HTMLElement | null>(null);
 const circleLeft = ref("");
@@ -39,11 +40,12 @@ const currentTrack = ref(null);
 const currentTrackIndex = ref(0);
 const transitionName = ref("");
 
-function play() {
+function play(flag?: boolean) {
   if (audio.value?.paused) {
     audio.value?.play();
     isTimerPlaying.value = true;
   } else {
+    if (flag) return;
     audio.value?.pause();
     isTimerPlaying.value = false;
   }
@@ -133,8 +135,7 @@ function resetPlayer() {
 function favorite() {
   tracks[currentTrackIndex.value].favorited = !tracks[currentTrackIndex.value].favorited;
 }
-onMounted(() => {
-  currentTrack.value = tracks[0];
+const createAudio = function () {
   audio.value = new Audio();
   audio.value.src = currentTrack.value.source;
   audio.value.ontimeupdate = function () {
@@ -147,21 +148,50 @@ onMounted(() => {
     nextTrack();
     isTimerPlaying.value = true;
   };
-});
-const closeMini = function () {
-  is_mini.value = !is_mini.value;
 };
+
+onMounted(() => {
+  currentTrack.value = tracks[0];
+  // createAudio();
+  play(true);
+});
+
+defineExpose({play});
 </script>
 
 <template>
   <div class="music">
+    <div
+      class="mark"
+      v-if="showMark"
+      @click="
+        play();
+        showMark = false;
+      "
+    >
+      <!-- <div class="enter">Welcome</div> -->
+    </div>
     <ClientOnly>
-      <div class="list" @click="closeMini()">
+      <div class="list" @click="is_mini = !is_mini">
         <svg class="icon">
           <use xlink:href="#icon-list"></use>
         </svg>
       </div>
       <div class="wrapper">
+        <audio
+          ref="audio"
+          autoplay
+          :src="currentTrack.source"
+          @timeupdate="generateTime()"
+          @loadedmetadata="generateTime()"
+          @ended="
+            nextTrack();
+            isTimerPlaying = true;
+          "
+        >
+          Your browser does not support the
+          <code>audio</code> element.
+        </audio>
         <div class="player" :class="[!is_mini ? 'backInRight' : 'backOutRight']" v-show="!is_mini">
           <div class="player__top">
             <div class="player-cover">
@@ -190,7 +220,7 @@ const closeMini = function () {
                   <use xlink:href="#icon-next"></use>
                 </svg>
               </div>
-              <div class="player-controls__item -xl js-play" @click="play">
+              <div class="player-controls__item -xl js-play" @click="play()">
                 <svg class="icon">
                   <use xlink:href="#icon-pause" v-if="isTimerPlaying"></use>
                   <use xlink:href="#icon-play" v-else></use>
@@ -714,6 +744,29 @@ body {
 
 /*# sourceMappingURL=main.css.map */
 
+.mark {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(8, 8, 8, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+.enter {
+  width: 10rem;
+  height: 4rem;
+  color: springgreen;
+  font-size: 2rem;
+  font-weight: bolder;
+  /* font-family: "Ma Shan Zheng", cursive; */
+  border: 2px solid rgb(172 184 204 / 45%);
+  border-radius: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .music {
   background: #dfe7ef;
   position: relative;

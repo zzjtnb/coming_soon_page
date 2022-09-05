@@ -79,8 +79,7 @@ onBeforeUnmount(() => {
       </div>
       <!-- //newsletter -->
       <div class="news">
-        <p>这个世界上没有什么东西是永远属于你的,但有一个东西例外,那就是本领,谁也抢不走.</p>
-        <p>一个浪迹天涯的游子回到故乡的时候,发现的第一件事总是自己的恋人变成别人的老婆.</p>
+        <TypeWriter :texts="['这个世界上没有什么东西是永远属于你的,但有一个东西例外,那就是本领,谁也抢不走.', '一个浪迹天涯的游子回到故乡的时候,发现的第一件事总是自己的恋人变成别人的老婆.']" />
       </div>
     </div>
     <!-- //content -->
@@ -364,7 +363,8 @@ span.simply-word {
   }
 
   .w3l-agile p {
-    font-size: 0.8vw;
+    /* font-size: 0.8vw; */
+    font-size: 0.8rem;
   }
 
   span.simply-amount {
@@ -435,11 +435,20 @@ span.simply-word {
 }
 
 .news {
-  text-align: center;
   font-family: "Ma Shan Zheng", cursive;
   color: springgreen;
   line-height: 2rem;
-  font-size: 1rem;
+  font-size: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+}
+@media (max-width: 1080px) {
+  .news {
+    text-align: center;
+  }
 }
 
 /*-- //responsive --*/
